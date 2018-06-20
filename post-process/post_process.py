@@ -182,7 +182,7 @@ class post_process:
         c['time']=1
         c['notDetected']=0
         c['alert']=0
-        c['frameno']=0
+        c['frameno']=frameno
         self.past_cars.append(c)
     idx = -1
     for c in self.past_cars:
