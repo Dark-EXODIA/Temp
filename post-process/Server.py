@@ -29,7 +29,9 @@ class Server:
 
     def SendAlarm(self,Alarm):
         #server code   
-        print("frame  is "+str(self.i))
+        print("frame is "+str(self.i))
+        if Alarm[0] != -1 or Alarm[1] != -1 or Alarm[2] != -1 or Alarm[3] != -1:
+            print("Alarm!!!")
         print(Alarm)
 
     def detectObjects(self,frame) :
