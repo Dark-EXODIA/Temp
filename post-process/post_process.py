@@ -142,6 +142,7 @@ class post_process:
   def abandoned_luggage(self,detections, frameno):
     cur_people = []
     cur_luggage = []
+    inc_lug_time = []
     for l in self.past_luggage:
       l['notDetected']+=1
     for i in detections:
@@ -174,6 +175,7 @@ class post_process:
 #same as abandoned_luggage
   def car_parking(self,detections, frameno):
     cur_cars = []
+    inc_car_time = []
     for c in self.past_cars:
       c['notDetected']+=1
     for d in detections:
