@@ -17,9 +17,9 @@ class Server:
         s=1+1
     def getRequiredActions(self):
         #server code
-        self.actions['abandoned_luggage']=1   
+        self.actions['abandoned_luggage']=0   
         self.actions['car_parking']=1    
-        self.actions['crowd']=1
+        self.actions['crowd']=0
         self.actions['weapon']=0
     def getNewFrame(self):
         #server code
