@@ -126,10 +126,8 @@ class post_process:
   #if luggage isn't in past_luggage add it
   #check for all past_luggage if any hasn't been detected for a certain period then remove it from past_luggage
   def abandoned_luggage(self,detections):
-
     cur_people = []
     cur_luggage = []
-    print(detections)
     for l in self.past_luggage:
       l['notDetected']+=1
     for i in detections:
@@ -181,38 +179,38 @@ class post_process:
         print("removing car", idx)
         del self.past_cars[idx]
     return -1
-def crowd(self,detections):
-    cnt = 0
-    frameNo = detections[i]['framenum']
-    for d in detections:
-      if d['label'] == "person":
-        cnt+=1
-    print("Found", len(cur_people), "people")
-    if cnt > crowd_threshold and crowdAlarm == 0:
-    	self.crowdAlarm=1
-    	self.no_crowd = 0
-    	return frameNo
-    if cnt <= crowd_threshold:
-    	self.no_crowd += 1
-    if cnt <= crowd_threshold and self.no_crowd > s:
-    	self.crowdAlarm=0
-    	self.no_crowd = 0	
-    return -1
-def weapon(detections):
-    weapon = 0
-    frameNo = detections[i]['framenum']
-    for d in detections:
-      if d['label'] == "weapon":
-        weapon=1
-    print("Found weapon")
-    if weapon == 1 and weaponAlarm == 0:
-    	self.weaponAlarm=1
-    	self.no_weapon = 0
-    	return frameNo
-    if weapon == 0:
-    	self.no_weapon += 1
-    if weapon == 0 and self.no_weapon > s:
-    	self.weaponAlarm=0
-    	self.no_weapon = 0
+  def crowd(self,detections):
+      cnt = 0
+      frameNo = detections[i]['framenum']
+      for d in detections:
+        if d['label'] == "person":
+          cnt+=1
+      print("Found", len(cur_people), "people")
+      if cnt > crowd_threshold and crowdAlarm == 0:
+        self.crowdAlarm=1
+        self.no_crowd = 0
+        return frameNo
+      if cnt <= crowd_threshold:
+        self.no_crowd += 1
+      if cnt <= crowd_threshold and self.no_crowd > s:
+        self.crowdAlarm=0
+        self.no_crowd = 0	
+      return -1
+  def weapon(self,detections):
+      weapon = 0
+      frameNo = detections[i]['framenum']
+      for d in detections:
+        if d['label'] == "weapon":
+          weapon=1
+      print("Found weapon")
+      if weapon == 1 and weaponAlarm == 0:
+        self.weaponAlarm=1
+        self.no_weapon = 0
+        return frameNo
+      if weapon == 0:
+        self.no_weapon += 1
+      if weapon == 0 and self.no_weapon > s:
+        self.weaponAlarm=0
+        self.no_weapon = 0
 	
 ######################################################################
