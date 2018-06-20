@@ -1,9 +1,9 @@
 #format of detection {"label":"person", "confidence": 0.56, "topleft": {"x": 184, "y": 101}, "bottomright": {"x": 274, "y": 382}}
 import math
 fps = 15 #fps of video
-k = 60  #time allowed for luggage to be alone in sec
-k_car = 4*fps #time allowed for car to stop in sec
-s = 2 * fps
+k = 60 * fps #time allowed for luggage to be alone in sec
+k_car = 4 * fps #time allowed for car to stop in sec
+s = 1 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
 iou_threshold=0.8
 crowd_threshold=20
@@ -17,6 +17,7 @@ class post_process:
     self.weaponAlarm = 0
     self.no_weapon = 0
     self.weapon_frameno = 0
+    self.crowd_frameno = 0
     self.crowd_timer=0
     self.weapon_timer=0
 #Get iou betweenm 2 objects. o1 and o2 have to be of detection format
@@ -72,9 +73,9 @@ class post_process:
   def isPersonNear(self,luggage, people):
     for p in people:
       if self.distance(self.center(luggage), self.center(p)) - self.diameter(luggage) - self.diameter(p) <= d * self.height(p)  :
-        #print("Person is near")
+        print("Person is near")
         return 1
-    #print("No person is near")
+    print("No person is near")
     return 0
 
 # checks if this luggage exists in past_luggage and takes approperiate action
@@ -97,13 +98,13 @@ class post_process:
           if l['alert']==0:
             print("Exceeded alone time and didn't alert")
             c['alert']=1
-            return 1
+            return (1, l['frameno'])
           print("Exceeded alone time but alerted")
-          return 2
+          return (2, l['frameno'])
         print("found item in past_luggage")
-        return 2
+        return (2, l['frameno'])
     print("Didn't find luggage in past")
-    return 0
+    return (0,-1)
 
 #same as isOverdueLuggage
   def isOverdueCar(self,car):
@@ -117,13 +118,13 @@ class post_process:
           if c['alert']==0:
             print("Exceeded stop time and didn't alert")
             c['alert']=1
-            return 1
+            return (1, c['frameno'])
           print("Exceeded stop time but alerted")
-          return 2
+          return (2, c['frameno'])
         print("found car in past_cars")
-        return 2
+        return (2, c['frameno'])
     print("Didn't find car in past")
-    return 0
+    return (0,-1)
 
   #method to detect luggage that has been abandoned (i.e. no person near it) for some time k
   #Procedure:
@@ -148,9 +149,9 @@ class post_process:
     for l in cur_luggage:
       if self.isPersonNear(l, cur_people)==1:
         continue
-      ret = self.isOverdueLuggage(l)
+      ret,ret_frameno = self.isOverdueLuggage(l)
       if ret==1:
-        return l['frameno']
+        return ret_frameno
       if ret == 0: 
         l['time']=1
         l['notDetected']=0
@@ -174,9 +175,9 @@ class post_process:
         cur_cars.append(d)
     print("Found", len(cur_cars), "car(s)")
     for c in cur_cars:
-      ret = self.isOverdueCar(c)
+      ret,ret_frameno = self.isOverdueCar(c)
       if ret==1:
-        return c['frameno']
+        return ret_frameno
       if ret == 0: 
         c['time']=1
         c['notDetected']=0
@@ -223,8 +224,8 @@ class post_process:
         if self.weapon_timer > s and self.weaponAlarm == 0:
           self.weaponAlarm=1
           return self.weapon_frameno
-        elif self.crowd_timer == 1:
-          self.crowd_frameno = frameno
+        elif self.weapon_timer == 1:
+          self.weapon_frameno = frameno
       if weapon == 0:
         self.no_weapon += 1
       if weapon == 0 and self.no_weapon > s:
