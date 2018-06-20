@@ -6,6 +6,7 @@ k_car = 60 * fps #time allowed for car to stop in sec
 s = 2 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
 iou_threshold=0.8
+crowd_threshold=20
 
 class post_process:
   def __init__(self):
@@ -15,6 +16,9 @@ class post_process:
     self.no_crowd = 0
     self.weaponAlarm = 0
     self.no_weapon = 0
+    self.weapon_frameno = 0
+    self.crowd_timer=0
+    self.weapon_timer=0
 #Get iou betweenm 2 objects. o1 and o2 have to be of detection format
   def iou(self,o1, o2):
     o1_x1 = o1['topleft']['x']
@@ -57,12 +61,17 @@ class post_process:
   def distance(self,p1, p2):
     distance = math.sqrt((p1['x']-p2['x'])**2 +(p1['y']-p2['y'])**2)
     print("distance:",distance)
-    return  distance
+    return  distance 
+	
+  def diameter (self, obj):
+    dim = (obj['bottomright']['x'] - obj['topleft']['x']) / 2
+    print("Diameter", dim)
+    return dim
 #check if there exists a person such that the distance between luggage and person is <= distance threshold
-#(which is d * height of person)	
+#(which is d * height of person)
   def isPersonNear(self,luggage, people):
     for p in people:
-      if self.distance(self.center(luggage), self.center(p)) <= d * self.height(p):
+      if self.distance(self.center(luggage), self.center(p)) - self.diameter(luggage) - self.diameter(p) <= d * self.height(p)  :
         print("Person is near")
         return 1
     print("No person is near")
@@ -125,7 +134,7 @@ class post_process:
   #if luggage in past_lugage but didn't exceed k increment its time and return
   #if luggage isn't in past_luggage add it
   #check for all past_luggage if any hasn't been detected for a certain period then remove it from past_luggage
-  def abandoned_luggage(self,detections):
+  def abandoned_luggage(self,detections, frameno):
     cur_people = []
     cur_luggage = []
     for l in self.past_luggage:
@@ -141,11 +150,12 @@ class post_process:
         continue
       ret = self.isOverdueLuggage(l)
       if ret==1:
-        return l['framenum']
+        return l['frameno']
       if ret == 0: 
         l['time']=1
         l['notDetected']=0
         l['alert']=0
+        l['frameno']=frameno
         self.past_luggage.append(l)
     idx = -1
     for l in self.past_luggage:
@@ -155,7 +165,7 @@ class post_process:
         del self.past_luggage[idx]
     return -1
 #same as abandoned_luggage
-  def car_parking(self,detections):
+  def car_parking(self,detections, frameno):
     cur_cars = []
     for c in self.past_cars:
       c['notDetected']+=1
@@ -166,11 +176,12 @@ class post_process:
     for c in cur_cars:
       ret = self.isOverdueCar(c)
       if ret==1:
-        return i['framenum']
+        return c['frameno']
       if ret == 0: 
         c['time']=1
         c['notDetected']=0
         c['alert']=0
+        c['frameno']=0
         self.past_cars.append(c)
     idx = -1
     for c in self.past_cars:
@@ -179,38 +190,47 @@ class post_process:
         print("removing car", idx)
         del self.past_cars[idx]
     return -1
-  def crowd(self,detections):
+  def crowd(self,detections, frameno):
       cnt = 0
-      frameNo = detections[i]['framenum']
       for d in detections:
         if d['label'] == "person":
           cnt+=1
-      print("Found", len(cur_people), "people")
-      if cnt > crowd_threshold and crowdAlarm == 0:
-        self.crowdAlarm=1
+      print("Found", cnt, "people")
+      if cnt > crowd_threshold:
+        self.crowd_timer += 1
         self.no_crowd = 0
-        return frameNo
+        if self.crowd_timer > s and self.crowdAlarm == 0:
+          self.crowdAlarm=1
+          return self.crowd_frameno
+        elif self.crowd_timer == 1:
+          self.crowd_frameno = frameno
       if cnt <= crowd_threshold:
         self.no_crowd += 1
       if cnt <= crowd_threshold and self.no_crowd > s:
         self.crowdAlarm=0
-        self.no_crowd = 0	
+        self.no_crowd = 0
+        self.crowd_timer = 0
       return -1
-  def weapon(self,detections):
+  def weapon(self,detections, frameno):
       weapon = 0
-      frameNo = detections[i]['framenum']
       for d in detections:
         if d['label'] == "weapon":
           weapon=1
       print("Found weapon")
-      if weapon == 1 and weaponAlarm == 0:
-        self.weaponAlarm=1
+      if weapon == 1:
+        self.weapon_timer += 1
         self.no_weapon = 0
-        return frameNo
+        if self.weapon_timer > s and self.weaponAlarm == 0:
+          self.weaponAlarm=1
+          return self.weapon_frameno
+        elif self.crowd_timer == 1:
+          self.crowd_frameno = frameno
       if weapon == 0:
         self.no_weapon += 1
       if weapon == 0 and self.no_weapon > s:
         self.weaponAlarm=0
         self.no_weapon = 0
+        self.weapon_timer = 0
+      return -1
 	
 ######################################################################
