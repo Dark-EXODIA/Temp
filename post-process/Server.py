@@ -10,7 +10,7 @@ class Server:
         self.tfnet = TFNet(options)
         self.detect = post_process()
         self.actions={}
-        self.i=10
+        self.i=1000
        
     def newConnection(self):
         #server code
