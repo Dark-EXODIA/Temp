@@ -29,11 +29,12 @@ class Server:
 
     def SendAlarm(self,Alarm):
         #server code   
-        print(Alarm+"frame  is "+str(self.i))
+        print("frame  is "+str(self.i))
+        print(Alarm)
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
-        print(result)
+        #print(result)
         return result
     def detectActions(self,objects):
         Alarm= np.zeros(4)
