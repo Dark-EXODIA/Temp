@@ -42,7 +42,7 @@ class post_process:
     area2 = (o2_x2-o2_x1) * (o2_y2-o2_y1)
     union = area1 + area2 - intersection
     iou = 1.0*intersection / union
-    print("iou:",iou)
+    #print("iou:",iou)
     return iou
 
 #get center of object detected. x has to be of detection format
@@ -50,31 +50,31 @@ class post_process:
     center = {}
     center['x'] = (x['bottomright']['x'] - x['topleft']['x']) / 2 + x['topleft']['x'] 
     center['y'] = (x['bottomright']['y'] - x['topleft']['y']) / 2 + x['topleft']['y']
-    print("Center:", center['x'], center['y'])
+    #print("Center:", center['x'], center['y'])
     return center
 #get height of person. person is of known format
   def height(self,person):
     height = person['bottomright']['y'] - person['topleft']['y']
-    print("height:",height)
+    #print("height:",height)
     return height
 #get distance between 2 centers (points) using euclidean distance: d = sqrt((x2-x1)^2+(y2-y1)^2)
   def distance(self,p1, p2):
     distance = math.sqrt((p1['x']-p2['x'])**2 +(p1['y']-p2['y'])**2)
-    print("distance:",distance)
+    #print("distance:",distance)
     return  distance 
 	
   def diameter (self, obj):
     dim = (obj['bottomright']['x'] - obj['topleft']['x']) / 2
-    print("Diameter", dim)
+    #print("Diameter", dim)
     return dim
 #check if there exists a person such that the distance between luggage and person is <= distance threshold
 #(which is d * height of person)
   def isPersonNear(self,luggage, people):
     for p in people:
       if self.distance(self.center(luggage), self.center(p)) - self.diameter(luggage) - self.diameter(p) <= d * self.height(p)  :
-        print("Person is near")
+        #print("Person is near")
         return 1
-    print("No person is near")
+    #print("No person is near")
     return 0
 
 # checks if this luggage exists in past_luggage and takes approperiate action
