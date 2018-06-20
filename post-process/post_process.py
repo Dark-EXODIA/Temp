@@ -7,6 +7,8 @@ s = 1 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
 iou_threshold=0.6
 crowd_threshold=20
+inc_lug_time = []
+inc_car_time = []
 
 class post_process:
   def __init__(self):
@@ -92,8 +94,9 @@ class post_process:
     for l in self.past_luggage:
       idx+=1
       if self.iou(l, luggage) >= iou_threshold:
-        l['notDetected']=0
-        l['time']+=1
+        l['notDetected']=0        
+        if idx not in inc_lug_time:
+		inc_lug_time.append(idx)
         if l['time'] > k:
           if l['alert']==0:
             print("Exceeded alone time and didn't alert")
@@ -113,7 +116,8 @@ class post_process:
       idx+=1
       if self.iou(c, car) >= iou_threshold:
         c['notDetected']=0
-        c['time']+=1
+        if idx not in inc_car_time:
+		inc_car_time.append(idx)
         if c['time'] > k_car:
           if c['alert']==0:
             print("Exceeded stop time and didn't alert")
