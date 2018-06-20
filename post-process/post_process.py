@@ -126,8 +126,10 @@ class post_process:
   #if luggage isn't in past_luggage add it
   #check for all past_luggage if any hasn't been detected for a certain period then remove it from past_luggage
   def abandoned_luggage(self,detections):
+
     cur_people = []
     cur_luggage = []
+    print(detections)
     for l in self.past_luggage:
       l['notDetected']+=1
     for i in detections:
