@@ -29,7 +29,7 @@ class Server:
 
     def SendAlarm(self,Alarm):
         #server code   
-        print(Alarm)
+        print(Alarm+"frame  is "+str(self.i))
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
