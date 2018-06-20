@@ -162,6 +162,8 @@ class post_process:
         l['alert']=0
         l['frameno']=frameno
         self.past_luggage.append(l)
+    for i in inc_lug_time:
+      self.past_luggage[i]['time'] += 1
     idx = -1
     for l in self.past_luggage:
       idx+=1
@@ -189,7 +191,7 @@ class post_process:
         c['frameno']=frameno
         self.past_cars.append(c)
     for i in inc_car_time:
-      past_cars[i]['time'] += 1
+      self.past_cars[i]['time'] += 1
     idx = -1
     for c in self.past_cars:
       idx+=1
