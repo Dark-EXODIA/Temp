@@ -1,7 +1,7 @@
 #format of detection {"label":"person", "confidence": 0.56, "topleft": {"x": 184, "y": 101}, "bottomright": {"x": 274, "y": 382}}
 import math
 fps = 30 #fps of video
-k = 60 * fps #time allowed for luggage to be alone in sec
+k = 60  #time allowed for luggage to be alone in sec
 k_car = 60 * fps #time allowed for car to stop in sec
 s = 2 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
