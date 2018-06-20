@@ -23,7 +23,7 @@ class Server:
         self.actions['weapon']=0
     def getNewFrame(self):
         #server code
-        frame = cv2.imread("videos/image-"+self.i+".png")
+        frame = cv2.imread("videos/image-"+str(self.i)+".png")
         self.i=self.i+1
         return frame
 
