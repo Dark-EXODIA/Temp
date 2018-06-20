@@ -96,7 +96,7 @@ class post_process:
       if self.iou(l, luggage) >= iou_threshold:
         l['notDetected']=0        
         if idx not in inc_lug_time:
-		inc_lug_time.append(idx)
+          inc_lug_time.append(idx)
         if l['time'] > k:
           if l['alert']==0:
             print("Exceeded alone time and didn't alert")
@@ -117,7 +117,7 @@ class post_process:
       if self.iou(c, car) >= iou_threshold:
         c['notDetected']=0
         if idx not in inc_car_time:
-		inc_car_time.append(idx)
+          inc_car_time.append(idx)
         if c['time'] > k_car:
           if c['alert']==0:
             print("Exceeded stop time and didn't alert")
