@@ -10,6 +10,7 @@ class Server:
         self.tfnet = TFNet(options)
         self.detect = post_process()
         self.actions={}
+        self.i=10
        
     def newConnection(self):
         #server code
@@ -22,7 +23,8 @@ class Server:
         self.actions['weapon']=0
     def getNewFrame(self):
         #server code
-        frame = cv2.imread("./sample_img/sample_dog.jpg")
+        frame = cv2.imread("videos/image-"+self.i+".png")
+        self.i=self.i+1
         return frame
 
     def SendAlarm(self,Alarm):
