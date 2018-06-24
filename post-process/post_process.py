@@ -5,7 +5,7 @@ k = 60 * fps #time allowed for luggage to be alone in sec
 k_car = 4 * fps #time allowed for car to stop in sec
 s = 1 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
-iou_threshold=0
+iou_threshold=0.8
 crowd_threshold=20
 
 class post_process:
