@@ -33,7 +33,9 @@ class Server:
         if Alarm[0] >= 0 or Alarm[1] >= 0 or Alarm[2] >= 0 or Alarm[3] >= 0:
             print(Alarm)
             print("Alarm!!!")
-        #print(Alarm)
+            return 1
+        print(Alarm)
+        return 0
         
 
     def detectObjects(self,frame) :
