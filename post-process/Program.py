@@ -8,7 +8,9 @@ while True:
     frame= MyServer.getNewFrame()
     objects= MyServer.detectObjects(frame)
     Alarms= MyServer.detectActions(objects)
-    MyServer.SendAlarm(Alarms)
+    l=MyServer.SendAlarm(Alarms)
+    if l==1:
+        break
     t1 = time.time()
-    print(t1-t0)
+    #print(t1-t0)
 
