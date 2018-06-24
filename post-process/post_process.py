@@ -125,7 +125,7 @@ class post_process:
             return (1, c['frameno'])
           print("Exceeded stop time but alerted")
           return (2, c['frameno'])
-        print("found car in past_cars")
+        #print("found car in past_cars")
         return (2, c['frameno'])
     print("Didn't find car in past")
     return (0,-1)
