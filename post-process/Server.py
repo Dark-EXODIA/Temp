@@ -30,11 +30,9 @@ class Server:
     def SendAlarm(self,Alarm):
         #server code   
         print("frame is "+str(self.i))
-        if Alarm[0] >= 0 or Alarm[1] >= 0 or Alarm[2] >= 0 or Alarm[3] >= 0:
-            print(Alarm)
-            print("Alarm!!!")
-            return 1
         print(Alarm)
+        if Alarm[0] >= 0 or Alarm[1] >= 0 or Alarm[2] >= 0 or Alarm[3] >= 0:          
+            print("Alarm!!!")
         return 0
         
 
