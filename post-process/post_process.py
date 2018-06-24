@@ -193,6 +193,7 @@ class post_process:
         c['alert']=0
         c['frameno']=frameno
         self.past_cars.append(c)
+    print(inc_car_time)
     for i in inc_car_time:
       self.past_cars[i]['time'] += 1
     idx = -1
