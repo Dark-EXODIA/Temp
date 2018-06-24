@@ -164,6 +164,7 @@ class post_process:
         l['frameno']=frameno
         self.past_luggage.append(l)
     for i in inc_lug_time:
+      print("increasing time of car ", i)
       self.past_luggage[i]['time'] += 1
     idx = -1
     for l in self.past_luggage:
