@@ -6,7 +6,7 @@ import numpy as np
 class Server:
 
     def __init__(self):
-        options = {"model": "cfg/yolo.cfg", "load": "bin/yolov2.weights","gpu":1.0,"threshold":.2}
+        options = {"model": "cfg/yolo.cfg", "load": "bin/yolov2.weights","gpu":1.0}
         self.tfnet = TFNet(options)
         self.detect = post_process()
         self.actions={}
