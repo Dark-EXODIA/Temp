@@ -30,9 +30,11 @@ class Server:
     def SendAlarm(self,Alarm):
         #server code   
         print("frame is "+str(self.i))
-        if Alarm[0] > 0 or Alarm[1] > 0 or Alarm[2] > 0 or Alarm[3] > 0:
+        if Alarm[0] >= 0 or Alarm[1] >= 0 or Alarm[2] >= 0 or Alarm[3] >= 0:
+            print(Alarm)
             print("Alarm!!!")
-        print(Alarm)
+        #print(Alarm)
+        
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
