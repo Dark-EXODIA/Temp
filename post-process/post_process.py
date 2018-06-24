@@ -7,8 +7,6 @@ s = 1 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
 iou_threshold=0
 crowd_threshold=20
-inc_lug_time = []
-inc_car_time = []
 
 class post_process:
   def __init__(self):
@@ -89,14 +87,14 @@ class post_process:
   #1 if luggage remains longer than k in same spot
   #2 if luggae in same spot but didn't exceed k or already alerted
   #0 if luggage is not in past_luggage
-  def isOverdueLuggage(self,luggage):
+  def isOverdueLuggage(self,luggage, inc_time):
     idx = -1
     for l in self.past_luggage:
       idx+=1
       if self.iou(l, luggage) >= iou_threshold:
         l['notDetected']=0        
-        if idx not in inc_lug_time:
-          inc_lug_time.append(idx)
+        if idx not in inc_time:
+          inc_time.append(idx)
         if l['time'] > k:
           if l['alert']==0:
             print("Exceeded alone time and didn't alert")
@@ -110,14 +108,14 @@ class post_process:
     return (0,-1)
 
 #same as isOverdueLuggage
-  def isOverdueCar(self,car):
+  def isOverdueCar(self,car, inc_time):
     idx = -1
     for c in self.past_cars:
       idx+=1
       if self.iou(c, car) >= iou_threshold:
         c['notDetected']=0
-        if idx not in inc_car_time:
-          inc_car_time.append(idx)
+        if idx not in inc_time:
+          inc_time.append(idx)
         print(inc_car_time)
         if c['time'] > k_car:
           if c['alert']==0:
@@ -155,7 +153,7 @@ class post_process:
     for l in cur_luggage:
       if self.isPersonNear(l, cur_people)==1:
         continue
-      ret,ret_frameno = self.isOverdueLuggage(l)
+      ret,ret_frameno = self.isOverdueLuggage(l,inc_lug_time)
       if ret==1:
         return ret_frameno
       if ret == 0: 
@@ -185,7 +183,7 @@ class post_process:
         cur_cars.append(d)
     print("Found", len(cur_cars), "car(s)")
     for c in cur_cars:
-      ret,ret_frameno = self.isOverdueCar(c)
+      ret,ret_frameno = self.isOverdueCar(c,inc_car_time)
       if ret==1:
         return ret_frameno
       if ret == 0: 
