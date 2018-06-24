@@ -116,7 +116,6 @@ class post_process:
         c['notDetected']=0
         if idx not in inc_time:
           inc_time.append(idx)
-        print(inc_car_time)
         if c['time'] > k_car:
           if c['alert']==0:
             print("Exceeded stop time and didn't alert")
@@ -192,7 +191,6 @@ class post_process:
         c['alert']=0
         c['frameno']=frameno
         self.past_cars.append(c)
-    print(inc_car_time)
     for i in inc_car_time:
       self.past_cars[i]['time'] += 1
     idx = -1
