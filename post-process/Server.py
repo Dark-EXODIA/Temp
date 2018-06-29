@@ -40,6 +40,7 @@ class Server:
         result = self.tfnet.return_predict(frame)
         result2={}
         for obj in result:
+            print(obj['confidence'])
             if(obj['confidence'] > 0.40):
                 result2.append(obj)
         print(result2)
