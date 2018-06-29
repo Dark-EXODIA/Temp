@@ -98,7 +98,7 @@ class post_process:
         if l['time'] > k:
           if l['alert']==0:
             print("Exceeded alone time and didn't alert")
-            c['alert']=1
+            l['alert']=1
             return (1, l['frameno'])
           print("Exceeded alone time but alerted")
           return (2, l['frameno'])
