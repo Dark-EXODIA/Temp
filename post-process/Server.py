@@ -6,7 +6,7 @@ import numpy as np
 class Server:
 
     def __init__(self):
-        options = {"model": "cfg/yolo.cfg", "load": "bin/yolov2.weights","gpu":1.0}
+        options = {"model": "cfg/yolo.cfg", "load": "bin/yolov2.weights","gpu":1.0,"threshold":0.4}
         self.tfnet = TFNet(options)
         self.detect = post_process()
         self.actions={}
@@ -38,13 +38,7 @@ class Server:
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
-        result2=[]
-        for obj in result:
-            print(obj['confidence'])
-            if(obj['confidence'] > 0.40):
-                result2.append(obj.copy())
-        print(result2)
-        return result2
+        return result
     def detectActions(self,objects):
         Alarm= [-2]*4
         if self.actions['abandoned_luggage']==1:
