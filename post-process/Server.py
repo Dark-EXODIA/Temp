@@ -38,7 +38,7 @@ class Server:
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
-        result2={}
+        result2=[]
         for obj in result:
             print(obj['confidence'])
             if(obj['confidence'] > 0.40):
