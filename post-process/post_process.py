@@ -144,9 +144,9 @@ class post_process:
     for l in self.past_luggage:
       l['notDetected']+=1
     for i in detections:
-      if i['label'] == "person":
+      if (i['label'] == "person" and int(i['confidence']) > 0.3) :
         cur_people.append(i)
-      elif (i['label'] == "suitcase" or i['label'] == "backpack" or i['label'] == "handbag") :
+      elif (i['label'] == "suitcase" or i['label'] == "backpack" or i['label'] == "handbag") and int(i['confidence']) > 0.3 :
         cur_luggage.append(i)
     print("Found", len(cur_people), "people and", len(cur_luggage), "luggage")
     for l in cur_luggage:
