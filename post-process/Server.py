@@ -38,7 +38,7 @@ class Server:
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
-        #print(result)
+        print(result)
         return result
     def detectActions(self,objects):
         Alarm= [-2]*4
