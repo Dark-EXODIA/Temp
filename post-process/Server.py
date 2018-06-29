@@ -42,7 +42,7 @@ class Server:
         for obj in result:
             print(obj['confidence'])
             if(obj['confidence'] > 0.40):
-                result2.append(obj)
+                result2.append(obj.copy())
         print(result2)
         return result2
     def detectActions(self,objects):
