@@ -38,8 +38,12 @@ class Server:
 
     def detectObjects(self,frame) :
         result = self.tfnet.return_predict(frame)
-        print(result)
-        return result
+        result2={}
+        for obj in result:
+            if(int(obj['confidence']) > 0.4):
+                result2.append(obj)
+        print(result2)
+        return result2
     def detectActions(self,objects):
         Alarm= [-2]*4
         if self.actions['abandoned_luggage']==1:
