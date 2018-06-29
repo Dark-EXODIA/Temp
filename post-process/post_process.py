@@ -146,7 +146,7 @@ class post_process:
     for i in detections:
       if i['label'] == "person":
         cur_people.append(i)
-      elif i['label'] == "luggage":
+      elif (i['label'] == "suitcase" or i['label'] == "backpack" or i['label'] == "handbag") :
         cur_luggage.append(i)
     print("Found", len(cur_people), "people and", len(cur_luggage), "luggage")
     for l in cur_luggage:
