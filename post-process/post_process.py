@@ -3,6 +3,7 @@ import math
 fps = 5 #fps of video
 k = 60 * fps #time allowed for luggage to be alone in sec
 k_car = 4 * fps #time allowed for car to stop in sec
+k_crowd = 5 * fps
 s = 1 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
 iou_threshold=0.8
@@ -214,7 +215,7 @@ class post_process:
       if cnt > crowd_threshold:
         self.crowd_timer += 1
         self.no_crowd = 0
-        if self.crowd_timer > s and self.crowdAlarm == 0:
+        if self.crowd_timer > k_crowd and self.crowdAlarm == 0:
           self.crowdAlarm=1
           return self.crowd_frameno
         elif self.crowd_timer == 1:
