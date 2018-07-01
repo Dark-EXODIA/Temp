@@ -1,12 +1,12 @@
 #format of detection {"label":"person", "confidence": 0.56, "topleft": {"x": 184, "y": 101}, "bottomright": {"x": 274, "y": 382}}
 import math
-fps = 15 #fps of video
-k = 10 * fps #time allowed for luggage to be alone in sec
+fps = 5 #fps of video
+k = 60 * fps #time allowed for luggage to be alone in sec
 k_car = 4 * fps #time allowed for car to stop in sec
 s = 1 * fps
 d = 0.5 #ratio between height of person and distance allowed between person and luggage
 iou_threshold=0.8
-crowd_threshold=20
+crowd_threshold=0
 
 class post_process:
   def __init__(self):
@@ -20,7 +20,12 @@ class post_process:
     self.crowd_frameno = 0
     self.crowd_timer=0
     self.weapon_timer=0
-#Get iou betweenm 2 objects. o1 and o2 have to be of detection format
+  def setCarwait (self,k):
+    global k_car
+    k_car = k * fps #time allowed for car to stop in sec
+  def setperson (self,person):
+    global crowd_threshold
+    crowd_threshold = person
   def iou(self,o1, o2):
     o1_x1 = o1['topleft']['x']
     o1_y1 = o1['topleft']['y']
@@ -98,7 +103,7 @@ class post_process:
         if l['time'] > k:
           if l['alert']==0:
             print("Exceeded alone time and didn't alert")
-            l['alert']=1
+            c['alert']=1
             return (1, l['frameno'])
           print("Exceeded alone time but alerted")
           return (2, l['frameno'])
@@ -144,9 +149,9 @@ class post_process:
     for l in self.past_luggage:
       l['notDetected']+=1
     for i in detections:
-      if (i['label'] == "person"):
+      if i['label'] == "person":
         cur_people.append(i)
-      elif (i['label'] == "suitcase" or i['label'] == "backpack" or i['label'] == "handbag"):
+      elif i['label'] == "luggage":
         cur_luggage.append(i)
     print("Found", len(cur_people), "people and", len(cur_luggage), "luggage")
     for l in cur_luggage:
