@@ -212,7 +212,7 @@ class post_process:
         if d['label'] == "person":
           cnt+=1
       print("Found", cnt, "people")
-      if cnt > crowd_threshold:
+      if cnt >= crowd_threshold:
         self.crowd_timer += 1
         self.no_crowd = 0
         if self.crowd_timer > k_crowd and self.crowdAlarm == 0:
