@@ -184,7 +184,7 @@ class post_process:
     for c in self.past_cars:
       c['notDetected']+=1
     for d in detections:
-      if d['label'] == "car":
+      if d['label'] == "vehicle":
         cur_cars.append(d)
     print("Found", len(cur_cars), "car(s)")
     for c in cur_cars:
