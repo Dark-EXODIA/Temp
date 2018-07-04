@@ -18,9 +18,7 @@ class post_process:
     self.weaponAlarm = 0
     self.no_weapon = 0
     self.carAlarm = 0
-    self.no_car = 0
     self.luggageAlarm = 0
-    self.no_luggage = 0
     self.weapon_frameno = 0
     self.crowd_frameno = 0
     self.crowd_timer=0
@@ -221,7 +219,6 @@ class post_process:
       ret,ret_frameno = self.isOverdueCar(c,inc_car_time)
       #get frameno of earliest car that is overdue
       if ret==1:
-        self.no_car = 0
         if due_car_frameno_start == -1 or ret_frameno < due_car_frameno_start:
             due_car_frameno_start = ret_frameno
       #car wasn't found in past, new car so add to past and intialize values
