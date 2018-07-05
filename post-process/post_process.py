@@ -9,6 +9,12 @@ d = 0.5 #ratio between height of person and distance allowed between person and 
 iou_threshold=0.8
 crowd_threshold=0
 
+weapon_confidence = 0.1
+people_confidence = 0.3
+luggage_confidence = 0.3
+vehicle_confidence = 0.3
+
+
 class post_process:
   def __init__(self):
     self.past_luggage = []
@@ -18,7 +24,9 @@ class post_process:
     self.weaponAlarm = 0
     self.no_weapon = 0
     self.carAlarm = 0
+    self.no_car = 0
     self.luggageAlarm = 0
+    self.no_luggage = 0
     self.weapon_frameno = 0
     self.crowd_frameno = 0
     self.crowd_timer=0
@@ -152,9 +160,9 @@ class post_process:
     for l in self.past_luggage:
       l['notDetected']+=1
     for i in detections:
-      if i['label'] == "person":
+      if i['label'] == "person" and i['confidence'] >= people_confidence:
         cur_people.append(i)
-      elif i['label'] == "luggage":
+      elif i['label'] == "luggage" and i['confidence'] >= luggage_confidence:
         cur_luggage.append(i)
     print("Found", len(cur_people), "people and", len(cur_luggage), "luggage")
     #for every current luggage detected
@@ -209,7 +217,7 @@ class post_process:
       c['notDetected']+=1
     for d in detections:
       print(d['label'])
-      if d['label'] == "vehicle":
+      if d['label'] == "vehicle" and i['confidence'] >= vehicle_confidence:
         cur_cars.append(d)
     print("Found", len(cur_cars), "car(s)")
     #for every car detected in this frame
@@ -219,6 +227,7 @@ class post_process:
       ret,ret_frameno = self.isOverdueCar(c,inc_car_time)
       #get frameno of earliest car that is overdue
       if ret==1:
+        self.no_car = 0
         if due_car_frameno_start == -1 or ret_frameno < due_car_frameno_start:
             due_car_frameno_start = ret_frameno
       #car wasn't found in past, new car so add to past and intialize values
@@ -256,7 +265,7 @@ class post_process:
   def crowd(self,detections, frameno):
       cnt = 0
       for d in detections:
-        if d['label'] == "person":
+        if d['label'] == "person" and i['confidence'] >= people_confidence:
           cnt+=1
       print("Found", cnt, "people")
       #if count of people in current frame > crowd_threshold, then increment crowd_timer and reset no_crowd timer to 0
@@ -287,7 +296,7 @@ class post_process:
   def weapon(self,detections, frameno):
       weapon = 0
       for d in detections:
-        if d['label'] == "weapon":
+        if d['label'] == "weapon" and i['confidence'] >= weapon_confidence:
           weapon=1
       print("Found weapon")
       #if a weapon is detected in current frame
